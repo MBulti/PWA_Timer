@@ -28,44 +28,45 @@
         }
     </style>
     <script>
-        let timerStarted = false;
-        function startTimer() {
-            if (!timerStarted) {
-                let startTime = new Date().getTime();
-                let duration = 1000 * 60 * 1;
-                let endTime = startTime + duration;
+        function startTimer(minDuration, name) {
+            let startTime = new Date().getTime();
+            let duration = 1000 * 60 * minDuration;
+            let endTime = startTime + duration;
+            
+            let timerId = setInterval(function() {
+                let timeLeft = endTime - new Date().getTime();
 
-                setInterval(function() {
-                    let timeLeft = endTime - new Date().getTime();
-
-                    if (timeLeft > 0) {
-                        let minutes = timeLeft / (1000 * 60);
-                        minutes = Math.floor(minutes);
-                        let seconds = (timeLeft / 1000) % 60;
-                        seconds = Math.round(seconds);
-                        seconds = ('0' + seconds).slice(-2);
-                        let text = minutes  +  ' : '  +  seconds;
-                        timer.innerHTML = text;
-                    } else {
-                        alert("Timer abgelaufen");
-                        timer.innerHTML = '00 : 00';
-                        timerStarted = false;
-                    }
-                }, 1000);
-                timerStarted = true;
-            }
+                if (timeLeft > 0) {
+                    let minutes = timeLeft / (1000 * 60);
+                    minutes = Math.floor(minutes);
+                    let seconds = (timeLeft / 1000) % 60;
+                    seconds = Math.round(seconds);
+                    let text = ('0' + minutes).slice(-2)  +  ' : '  +  ('0' + seconds).slice(-2);
+                    name.innerHTML = text;
+                } else {
+                    name.innerHTML = '00 : 00';
+                    alert("Timer abgelaufen");
+                    clearInterval(timerId);
+                    timerStarted = false;
+                }
+            }, 1000);
         }
+        
     </script>
-
 </head>
 
     <body class="background-dark">
 
-        <div class="center margin-top timer" id="timer"></div>
-
-
+        <div class="center margin-top timer" id="timer">00 : 00</div>
+        
         <div class="center margin-top timer">
-            <button onclick="startTimer()" value="Start">
+            <input type="text" id="timerValue1">
+            <button onclick="startTimer(timerValue1.value, timer)">Timer Starten</button>
+        </div>
+        <div class="center margin-top timer" id="timer2">00 : 00</div>
+        <div class="center margin-top timer">
+            <input type="text" id="timerValue2">
+            <button onclick="startTimer(timerValue2.value, timer2)">Timer Starten</button>
         </div>
     </body>
 </html>
